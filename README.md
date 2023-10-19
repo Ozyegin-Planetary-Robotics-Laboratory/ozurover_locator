@@ -8,6 +8,10 @@ This code is based on an older C class I wrote for STM32 platform. The parser wa
 
 Processing of NMEA messages is done char-by-char. The parser holds a state that resets when `$` character is received. For now, the program only parses `GPGLL` messages and ignores any other NMEA content.
 
+## Requirements
+
+* CMake >= 3.16
+
 ## Building
 
     mkdir build # Create a build folder
