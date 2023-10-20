@@ -23,14 +23,7 @@ void handleInterrupt() {
 int main(int argc, char *argv[]) {
     Log("Begin");
 
-    signal(SIGINT, handleInterrupt); // Attach interrupt handler
-
-    debug = strcmp(argv[1], "--debug") == 0; // Check debug flag
-
-    if(argc == 1 || argv[argc - 1][0] == '-') { // Check if a valid port argument has been provided
-        Log("No port specified!");
-        return -1;
-    }
+    signal(SIGINT, handleInterrupt); // Attach interrupt hander
 
     char *port = argv[1];
     Log2V("Port: ", port);
