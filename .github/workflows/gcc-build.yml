@@ -15,8 +15,8 @@ jobs:
       - uses: actions/checkout@v3
       
       - name: Initialize bin/ 
-      - run: mkdir ${{github.workspace}}/bin
+        run: mkdir ${{github.workspace}}/bin
       
       - name: Build with GCC
-      - run: gcc main.c -o bin/main
+        run: gcc main.c -o bin/main
       
