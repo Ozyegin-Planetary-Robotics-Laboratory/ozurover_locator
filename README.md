@@ -1,6 +1,6 @@
 # Locator for OzU Rover
 
-This program listens to specified serial UART port, parses NMEA data, and displays Latitude/Longitude information whenever a new data is available.
+This program listens to the specified serial UART port, parses NMEA data, and publishes Latitude/Longitude information to the topic "gps".
 
 ## About
 
@@ -10,17 +10,18 @@ Processing of NMEA messages is done char-by-char. The parser holds a state that 
 
 ## Requirements
 
-* CMake >= 3.16
+* ROS Melodic+
 
 ## Building
 
-    mkdir build # Create a build folder
-    cmake --build build # Build the Locator
+`catkin_make`
+
+If you only want to compile this package, then
+
+`catkin_make --only-pkg-with-deps neo6m-ros`
 
 ## Usage
     
-`locator [--debug] PORT`
+`rosrun neo6m-ros gps_interface PORT`
 
-`PORT` is the serial port that GPS UART is linked to. Such as /dev/ttys0
-
-`--debug` flag prints UART buffer.
+`PORT` is the serial port that GPS UART is linked to. Such as /dev/ttyTHS0
