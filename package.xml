@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>neo6m-ros</name>
+  <name>ozurover-locator</name>
   <version>0.0.0</version>
-  <description>The neo6m-ros package</description>
+  <description>The ozurover-locator package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
