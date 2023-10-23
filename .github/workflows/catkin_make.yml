@@ -2,9 +2,7 @@ name: Catkin Make
 
 on:
   push:
-    branches: [ "ros-node" ]
-  pull_request:
-    branches: [ "ros-node" ]
+    branches: [ "main" ]
 
 defaults:
   run:
