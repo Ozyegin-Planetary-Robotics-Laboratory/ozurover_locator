@@ -13,6 +13,6 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Build
-        working-directory: ~/catkin_ws
+        working-directory: /home/catkin_ws
         run: catkin_make --only-pkg-with-deps neo6m-ros
         shell: bash
