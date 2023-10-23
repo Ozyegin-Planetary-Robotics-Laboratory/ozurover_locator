@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Move Package to Catkin Workspace
-        run: mv ./ /home/exo/catkin_ws/src/ozu-rover-locator
+        run: cp -r ./ /home/exo/catkin_ws/src/ozurover-locator
 
       - name: Build
         working-directory: /home/exo/catkin_ws
