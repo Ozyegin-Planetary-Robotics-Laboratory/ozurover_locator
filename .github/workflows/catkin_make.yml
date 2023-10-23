@@ -23,4 +23,3 @@ jobs:
         working-directory: /home/exo/catkin_ws
         run: source /opt/ros/melodic/setup.bash && source /home/exo/catkin_ws/devel/setup.bash && catkin_make --only-pkg-with-deps neo6m-ros
         shell: bash
-
