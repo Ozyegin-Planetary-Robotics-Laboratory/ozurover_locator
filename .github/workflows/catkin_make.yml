@@ -1,0 +1,25 @@
+name: Catkin Make
+
+on:
+  push:
+    branches: [ "ros-node" ]
+  pull_request:
+    branches: [ "ros-node" ]
+
+defaults:
+  run:
+    shell: /bin/bash -leo pipefail {0}
+
+jobs:
+  build:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Move Package to Catkin Workspace
+        run: cp -r ./ /home/exo/catkin_ws/src/ozurover-locator
+
+      - name: Build
+        working-directory: /home/exo/catkin_ws
+        run: source /opt/ros/melodic/setup.bash && source /home/exo/catkin_ws/devel/setup.bash && catkin_make --only-pkg-with-deps neo6m-ros
+        shell: bash

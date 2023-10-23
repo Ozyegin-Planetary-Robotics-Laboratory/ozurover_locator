@@ -1,18 +1,10 @@
-#include <stdio.h>
-#include <stdbool.h>
-#include <stdint.h>
-#include <string.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <signal.h>
-
 #include "main.h"
 
-#define BUFFER_SIZE 128
-
 bool debug = false; // Verbose logging
-
 bool interrupted = false; // Stops the main loop
+char locatorLat[BUILDER_SIZE + 1] = "NA"; // Stores the latitude string
+char locatorLon[BUILDER_SIZE + 1] = "NA"; // Stores the longitude string
+geometry_msgs::PoseStamped msg_out;
 
 // SIGINT Handler
 void handleInterrupt() {
@@ -20,10 +12,22 @@ void handleInterrupt() {
     interrupted = true;
 }
 
+float GetLatFloat() {
+    return atof(locatorLat);
+}
+
+float GetLonFloat() {
+    return atof(locatorLon);
+}
+
 int main(int argc, char *argv[]) {
+    ros::init(argc, argv, "locator");
+    ros::NodeHandle nh;
+    ros::Publisher pub = nh.advertise<geometry_msgs::PoseStamped>("gps", 1);
+
     Log("Begin");
 
-    signal(SIGINT, handleInterrupt); // Attach interrupt hander
+    signal(SIGINT, (__sighandler_t) handleInterrupt); // Attach interrupt hander
 
     char *port = argv[1];
     Log2V("Port: ", port);
@@ -55,7 +59,7 @@ int main(int argc, char *argv[]) {
         }
 
         for(int i = 0; i < BUFFER_SIZE; i++) { // Iterate chars in buffer
-            Locator_Process(buffer[i]); // Process NMEA message char-by-char
+            Locator_Handle(buffer[i], pub); // Handle the NMEA sentence per-char
         }
     }
 
@@ -67,22 +71,21 @@ int main(int argc, char *argv[]) {
  * Locator Listener
  * Gets called and prints a message whenever a lat/long new data is available.
  */
-void listener() {
+void listener(ros::Publisher &pub) {
     Log("******** GPS Data (GPGLL) ********");
     Log4VT("Lat: ", GetLat(), "Lon: ", GetLon());
     Log("**********************************");
+
+    msg_out.header.stamp = ros::Time::now();
+    msg_out.header.frame_id = "gps";
+
+    msg_out.pose.position.x = GetLatFloat();
+    msg_out.pose.position.y = GetLonFloat();
+    msg_out.pose.position.z = 0.0f;
+
+    pub.publish(msg_out);
+
 }
-
-// Locator
-
-/*
- * Defines the size of the builder. Shouldn't be less than the maximum length of the tokens.
- * Content between commas are considered as tokens and saved to builder
- */
-#define BUILDER_SIZE 24
-
-char locatorLat[BUILDER_SIZE + 1] = "NA"; // Stores the latitude string
-char locatorLon[BUILDER_SIZE + 1] = "NA"; // Stores the longitude string
 
 /*
  * Defines the possible states of the processor, during a sentence. Indicates what part of sentence is being parsed.
@@ -149,7 +152,7 @@ void Locator_SkipState() {
 }
 
 // Handle the char from a NMEA sentence.
-bool Locator_Handle(char data) {
+bool Locator_Handle(char data, ros::Publisher &pub) {
     if(state == LOCATOR_STATE_END) state = LOCATOR_STATE_NULL; // If the previous sentence has ended, set locator state to LOCATOR_STATE_NULL.
     switch(data) { // Check for commas, dollar signs (Initial character of NMEA sentence), and other characters.
         case '$': // Beginning of a new NMEA sentence.
@@ -186,7 +189,7 @@ bool Locator_Handle(char data) {
                 Locator_SkipState();
             } else if (state == LOCATOR_STATE_UTC) { // UTC data is ignored
                 Locator_SkipState();
-                listener();
+                listener(pub);
             }
             Locator_CursorReset(); // Reset the builder cursor after each token
             break;
@@ -212,11 +215,6 @@ bool Locator_Handle(char data) {
             break;
     }
     return false;
-}
-
-// Process the NMEA sentence char
-void Locator_Process(char data) {
-    Locator_Handle(data);
 }
 
 // Get the latitude. Return NA if no data is available.
