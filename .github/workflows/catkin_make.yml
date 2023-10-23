@@ -19,11 +19,8 @@ jobs:
       - name: Move Package to Catkin Workspace
         run: mv . /home/exo/catkin_ws/src/ozu-rover-locator
 
-      - name: Source ROS
-        run: source /opt/ros/melodic/setup.bash | source /home/exo/catkin_ws/devel/setup.bash
-        shell: bash
-
       - name: Build
         working-directory: /home/exo/catkin_ws
-        run: catkin_make --only-pkg-with-deps neo6m-ros
+        run: source /opt/ros/melodic/setup.bash && source /home/exo/catkin_ws/devel/setup.bash && catkin_make --only-pkg-with-deps neo6m-ros
         shell: bash
+
