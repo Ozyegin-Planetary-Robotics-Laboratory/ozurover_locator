@@ -13,7 +13,7 @@
 #include <fcntl.h>
 #include <signal.h>
 #include <ros/ros.h>
-#include <geometry_msgs/PoseStamped.h>
+#include <ozurover_messages/GPS.h>
 
 #define BUFFER_SIZE 128
 #define BUILDER_SIZE 24

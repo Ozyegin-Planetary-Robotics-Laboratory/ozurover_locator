@@ -4,7 +4,7 @@ bool debug = false; // Verbose logging
 bool interrupted = false; // Stops the main loop
 char locatorLat[BUILDER_SIZE + 1] = "NA"; // Stores the latitude string
 char locatorLon[BUILDER_SIZE + 1] = "NA"; // Stores the longitude string
-geometry_msgs::PoseStamped msg_out;
+ozurover_messages::GPS msg_out;
 
 // SIGINT Handler
 void handleInterrupt() {
@@ -23,7 +23,7 @@ float GetLonFloat() {
 int main(int argc, char *argv[]) {
     ros::init(argc, argv, "locator");
     ros::NodeHandle nh;
-    ros::Publisher pub = nh.advertise<geometry_msgs::PoseStamped>("gps", 1);
+    ros::Publisher pub = nh.advertise<ozurover_messages::GPS>("gps", 1);
 
     Log("Begin");
 
@@ -76,12 +76,8 @@ void listener(ros::Publisher &pub) {
     Log4VT("Lat: ", GetLat(), "Lon: ", GetLon());
     Log("**********************************");
 
-    msg_out.header.stamp = ros::Time::now();
-    msg_out.header.frame_id = "gps";
-
-    msg_out.pose.position.x = GetLatFloat();
-    msg_out.pose.position.y = GetLonFloat();
-    msg_out.pose.position.z = 0.0f;
+    msg_out.latitude = GetLatFloat();
+    msg_out.longitude = GetLonFloat();
 
     pub.publish(msg_out);
 
