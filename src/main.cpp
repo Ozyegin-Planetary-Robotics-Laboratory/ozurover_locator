@@ -23,7 +23,7 @@ float GetLonFloat() {
 int main(int argc, char *argv[]) {
     ros::init(argc, argv, "locator");
     ros::NodeHandle nh;
-    ros::Publisher pub = nh.advertise<ozurover_messages::GPS>("gps", 1);
+    ros::Publisher pub = nh.advertise<ozurover_messages::GPS>("ares/gps", 1);
 
     Log("Begin");
 
