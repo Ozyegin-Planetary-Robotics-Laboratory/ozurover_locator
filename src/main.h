@@ -13,7 +13,7 @@
 #include <fcntl.h>
 #include <signal.h>
 #include <ros/ros.h>
-#include <ozurover_messages/GPS.h>
+#include <sensor_msgs/NavSatFix.h>
 
 #define BUFFER_SIZE 128
 #define BUILDER_SIZE 24

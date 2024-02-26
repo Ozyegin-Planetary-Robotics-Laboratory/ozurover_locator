@@ -4,7 +4,7 @@ bool debug = false; // Verbose logging
 bool interrupted = false; // Stops the main loop
 char locatorLat[BUILDER_SIZE + 1] = "NA"; // Stores the latitude string
 char locatorLon[BUILDER_SIZE + 1] = "NA"; // Stores the longitude string
-ozurover_messages::GPS msg_out;
+sensor_msgs::NavSatFix msg_out;
 
 // SIGINT Handler
 void handleInterrupt() {
@@ -23,7 +23,7 @@ float GetLonFloat() {
 int main(int argc, char *argv[]) {
     ros::init(argc, argv, "locator");
     ros::NodeHandle nh;
-    ros::Publisher pub = nh.advertise<ozurover_messages::GPS>("ares/gps", 1);
+    ros::Publisher pub = nh.advertise<sensor_msgs::NavSatFix>("ares/gps", 1);
 
     Log("Begin");
 
@@ -80,7 +80,6 @@ void listener(ros::Publisher &pub) {
     msg_out.longitude = GetLonFloat();
 
     pub.publish(msg_out);
-
 }
 
 /*
