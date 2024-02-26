@@ -10,7 +10,6 @@ project(ozurover-locator)
 find_package(catkin REQUIRED COMPONENTS
         roscpp
         std_msgs
-        ozurover_messages
         sensor_msgs
 )
 
