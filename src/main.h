@@ -14,6 +14,7 @@
 #include <signal.h>
 #include <ros/ros.h>
 #include <sensor_msgs/NavSatFix.h>
+#include "dms.h"
 
 #define BUFFER_SIZE 128
 #define BUILDER_SIZE 24

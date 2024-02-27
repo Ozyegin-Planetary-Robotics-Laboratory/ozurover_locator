@@ -13,11 +13,11 @@ void handleInterrupt() {
 }
 
 float GetLatFloat() {
-    return atof(locatorLat);
+    return DMS::DecimalDegrees(locatorLat);
 }
 
 float GetLonFloat() {
-    return atof(locatorLon);
+    return DMS::DecimalDegrees(locatorLon);
 }
 
 int main(int argc, char *argv[]) {
