@@ -4,6 +4,8 @@ bool debug = false; // Verbose logging
 bool interrupted = false; // Stops the main loop
 char locatorLat[BUILDER_SIZE + 1] = "NA"; // Stores the latitude string
 char locatorLon[BUILDER_SIZE + 1] = "NA"; // Stores the longitude string
+char locatorLatDir = "N"
+char locatorLonDir = "E"
 sensor_msgs::NavSatFix msg_out;
 
 // SIGINT Handler
@@ -13,11 +15,33 @@ void handleInterrupt() {
 }
 
 float GetLatFloat() {
-    return DMS::DecimalDegrees(locatorLat);
+    return GpsToDecimalDegrees(locatorLat, locatorLatDir);
 }
 
 float GetLonFloat() {
-    return DMS::DecimalDegrees(locatorLon);
+    return GpsToDecimalDegrees(locatorLon, locatorLonDir);
+}
+
+/**
+ * Convert NMEA absolute position to decimal degrees
+ * "ddmm.mmmm" or "dddmm.mmmm" really is D+M/60,
+ * then negated if quadrant is 'W' or 'S'
+ */
+float GpsToDecimalDegrees(const char* nmeaPos, char quadrant)
+{
+  float v= 0;
+  if(strlen(nmeaPos)>5)
+  {
+    char integerPart[3+1];
+    int digitCount= (nmeaPos[4]=='.' ? 2 : 3);
+    memcpy(integerPart, nmeaPos, digitCount);
+    integerPart[digitCount]= 0;
+    nmeaPos+= digitCount;
+    v= atoi(integerPart) + atof(nmeaPos)/60.;
+    if(quadrant=='W' || quadrant=='S')
+      v= -v;
+  }
+  return v;
 }
 
 int main(int argc, char *argv[]) {
@@ -195,15 +219,17 @@ bool Locator_Handle(char data, ros::Publisher &pub) {
                 Locator_AppendSafe(data); // Safe append longitude and latitude data to the builder.
                 // May cause loss of precision if the BUILDER_SIZE is not large enough.
             } else if (state == LOCATOR_STATE_LATDIR && data == 'S') { // Check if the latitude is on the South.
-                for (int i = BUILDER_SIZE - 1; i >= 1; i--) {
+                /*for (int i = BUILDER_SIZE - 1; i >= 1; i--) {
                     locatorLat[i] = locatorLat[i - 1]; // Shift latitude by 1 character.
                 }
-                locatorLat[0] = '-'; // Add minus to the beginning of the latitude
+                locatorLat[0] = '-'; // Add minus to the beginning of the latitude*/
+                locatorLatDir = 'S';
             } else if (state == LOCATOR_STATE_LONDIR && data == 'W') {
-                for (int i = BUILDER_SIZE - 1; i >= 1; i--) { // Check if the longitude is on the West.
+                /*for (int i = BUILDER_SIZE - 1; i >= 1; i--) { // Check if the longitude is on the West.
                     locatorLon[i] = locatorLon[i - 1]; // Shift longitude by 1 character.
                 }
-                locatorLon[0] = '-'; // Add minus to the beginning of the longitude
+                locatorLon[0] = '-'; // Add minus to the beginning of the longitude*/
+                locatorLonDir = 'W';
             } else if (state == LOCATOR_STATE_UTC) {
                 // TODO: UTC data isn't necessary at the moment
             }
