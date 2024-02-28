@@ -14,14 +14,6 @@ void handleInterrupt() {
     interrupted = true;
 }
 
-float GetLatFloat() {
-    return GpsToDecimalDegrees(locatorLat, locatorLatDir);
-}
-
-float GetLonFloat() {
-    return GpsToDecimalDegrees(locatorLon, locatorLonDir);
-}
-
 /**
  * Convert NMEA absolute position to decimal degrees
  * "ddmm.mmmm" or "dddmm.mmmm" really is D+M/60,
@@ -29,19 +21,27 @@ float GetLonFloat() {
  */
 float GpsToDecimalDegrees(const char* nmeaPos, char quadrant)
 {
-  float v= 0;
-  if(strlen(nmeaPos)>5)
-  {
-    char integerPart[3+1];
-    int digitCount= (nmeaPos[4]=='.' ? 2 : 3);
-    memcpy(integerPart, nmeaPos, digitCount);
-    integerPart[digitCount]= 0;
-    nmeaPos+= digitCount;
-    v= atoi(integerPart) + atof(nmeaPos)/60.;
-    if(quadrant=='W' || quadrant=='S')
-      v= -v;
-  }
-  return v;
+    float v= 0;
+    if(strlen(nmeaPos)>5)
+    {
+        char integerPart[3+1];
+        int digitCount= (nmeaPos[4]=='.' ? 2 : 3);
+        memcpy(integerPart, nmeaPos, digitCount);
+        integerPart[digitCount]= 0;
+        nmeaPos+= digitCount;
+        v= atoi(integerPart) + atof(nmeaPos)/60.;
+        if(quadrant=='W' || quadrant=='S')
+            v= -v;
+    }
+    return v;
+}
+
+float GetLatFloat() {
+    return GpsToDecimalDegrees(locatorLat, locatorLatDir);
+}
+
+float GetLonFloat() {
+    return GpsToDecimalDegrees(locatorLon, locatorLonDir);
 }
 
 int main(int argc, char *argv[]) {
