@@ -4,8 +4,8 @@ bool debug = false; // Verbose logging
 bool interrupted = false; // Stops the main loop
 char locatorLat[BUILDER_SIZE + 1] = "NA"; // Stores the latitude string
 char locatorLon[BUILDER_SIZE + 1] = "NA"; // Stores the longitude string
-char locatorLatDir = "N"
-char locatorLonDir = "E"
+char locatorLatDir = 'N'
+char locatorLonDir = 'E'
 sensor_msgs::NavSatFix msg_out;
 
 // SIGINT Handler
