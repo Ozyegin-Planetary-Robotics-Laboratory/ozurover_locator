@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>ozurover-locator</name>
+  <name>ozurover_locator</name>
   <version>0.0.0</version>
-  <description>The ozurover-locator package</description>
+  <description>The ozurover_locator package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
